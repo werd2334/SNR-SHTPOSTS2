@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>SNR-SHTPOSTS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #0f0f0f;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            background: black;
+            letter-spacing: 3px;
+        }
+
+        .feed {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 20px;
+        }
+
+        .meme {
+            width: 400px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.6);
+        }
+
+        .meme img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .like-btn.liked {
+            color: #ff2d55;
+        }
+
+        .like-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 500px) {
+            .meme {
+                width: 95%;
+            }
+
+            .meme img {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>SNR-SHTPOSTS</header>
+
+<div class="feed" id="feed"></div>
+
+<script>
+    const feed = document.getElementById("feed");
+    const TOTAL_MEMES = 12;
+
+    for (let i = 1; i <= TOTAL_MEMES; i++) {
+
+        const memeDiv = document.createElement("div");
+        memeDiv.className = "meme";
+
+        const img = document.createElement("img");
+        img.src = `memes/meme${i}.jpg`;
+        img.alt = `meme${i}`;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const likeBtn = document.createElement("button");
+        likeBtn.className = "like-btn";
+        likeBtn.innerHTML = "❤";
+
+        const likeCount = document.createElement("span");
+
+        const memeKey = `meme_${i}_likes`;
+        const likedKey = `meme_${i}_liked`;
+
+        let likes = localStorage.getItem(memeKey) || 0;
+        let liked = localStorage.getItem(likedKey);
+
+        likeCount.textContent = likes + " лайков";
+
+        if (liked) {
+            likeBtn.classList.add("liked");
+        }
+
+        likeBtn.addEventListener("click", () => {
+            if (!localStorage.getItem(likedKey)) {
+                likes++;
+                localStorage.setItem(memeKey, likes);
+                localStorage.setItem(likedKey, true);
+                likeBtn.classList.add("liked");
+                likeCount.textContent = likes + " лайков";
+            }
+        });
+
+        actions.appendChild(likeBtn);
+        actions.appendChild(likeCount);
+
+        memeDiv.appendChild(img);
+        memeDiv.appendChild(actions);
+
+        feed.appendChild(memeDiv);
+    }
+</script>
+
+</body>
+</html>
